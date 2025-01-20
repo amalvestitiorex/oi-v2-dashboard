@@ -3,9 +3,14 @@ import { Navbar } from "../ui/Navbar/Navbar";
 
 export const UserLayout = () => {
   return (
-    <div>
-      <Navbar />
-      <Outlet />
-    </div>
+    <Navbar>
+      <div
+        style={{
+          padding: "15px",
+        }}
+      >
+        <Outlet />
+      </div>
+    </Navbar>
   );
 };

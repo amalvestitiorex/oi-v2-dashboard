@@ -1,10 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+import { LanguageWrapper } from "../components/Language/LanguageWrapper";
 import { AdminLayout } from "../components/Layouts/AdminLayout";
 import { UserLayout } from "../components/Layouts/UserLayout";
 import {
-  AddLanguages,
   AddRecord,
-  AddTranslate,
   Auth,
   Buy,
   Console,
@@ -20,107 +19,159 @@ import {
   Version,
 } from "../pages";
 import { Record } from "../pages/Record";
+import { HtmlExport } from "../pages/HtmlExport";
 export const adminRouter = createBrowserRouter([
   {
     path: "/",
-    element: <AdminLayout />,
+    element: <Navigate to="/en" replace />,
+  },
+  {
+    path: "/:lang",
+    element: <LanguageWrapper />,
     children: [
       {
-        index: true,
-        element: <Dashboard />,
+        element: <AdminLayout />,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />,
+          },
+          {
+            path: "stats",
+            element: <Stats />,
+          },
+          {
+            path: "record/:id",
+            element: <Record />,
+          },
+          {
+            path: "records",
+            element: <RecordsTable />,
+          },
+          {
+            path: "add-records",
+            element: <AddRecord />,
+          },
+          {
+            path: "buy",
+            element: <Buy />,
+          },
+          {
+            path: "entities",
+            element: <Entity />,
+          },
+          {
+            path: "users",
+            element: <UsersTable />,
+          },
+          {
+            path: "user/add-user",
+            element: <User />,
+          },
+          {
+            path: "user/:id",
+            element: <User />,
+          },
+          {
+            path: "version",
+            element: <Version />,
+          },
+          {
+            path: "console",
+            element: <Console />,
+          },
+          {
+            path: "translates",
+            element: <TranslatesTable />,
+          },
+          {
+            path: "languages",
+            element: <LanguagesTable />,
+          },
+          {
+            path: "*",
+            element: <NotFound />,
+          },
+        ],
       },
       {
-        path: "/stats",
-        element: <Stats />,
-      },
-      {
-        path: "/record/:id",
-        element: <Record />,
-      },
-      {
-        path: "/records",
-        element: <RecordsTable />,
-      },
-      {
-        path: "/add-records",
-        element: <AddRecord />,
-      },
-      {
-        path: "/buy",
-        element: <Buy />,
-      },
-      {
-        path: "/entities",
-        element: <Entity />,
-      },
-      {
-        path: "/users",
-        element: <UsersTable />,
-      },
-      {
-        path: "/add-user",
-        element: <User />,
-      },
-      {
-        path: "/user/:id",
-        element: <User />,
-      },
-      {
-        path: "/version",
-        element: <Version />,
-      },
-      {
-        path: "/console",
-        element: <Console />,
-      },
-      {
-        path: "/translates",
-        element: <TranslatesTable />,
-      },
-      {
-        path: "/add-translate",
-        element: <AddTranslate />,
-      },
-      {
-        path: "/add-language",
-        element: <AddLanguages />,
-      },
-      {
-        path: "/languages",
-        element: <LanguagesTable />,
-      },
-      {
-        path: "*",
-        element: <NotFound />,
+        path: "record/:id/export",
+        element: <HtmlExport />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/en" replace />,
   },
 ]);
 
 export const userRouter = createBrowserRouter([
   {
     path: "/",
-    element: <UserLayout />,
+    element: <Navigate to="/en" replace />,
+  },
+  {
+    path: "/:lang",
+    element: <LanguageWrapper />,
     children: [
       {
+        element: <UserLayout />,
+        children: [
+          {
+            index: true,
+            element: <RecordsTable />,
+          },
+          {
+            path: "buy",
+            element: <Buy />,
+          },
+          {
+            path: "entities",
+            element: <Entity />,
+          },
+          {
+            path: "user/:id",
+            element: <User />,
+          },
+          {
+            path: "record/:id",
+            element: <Record />,
+          },
+          {
+            path: "version",
+            element: <Version />,
+          },
+          {
+            path: "*",
+            element: <NotFound />,
+          },
+        ],
+      },
+      {
+        path: "record/:id/export",
+        element: <HtmlExport />,
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <Navigate to="/en" replace />,
+  },
+]);
+
+export const authRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <Navigate to="/en" replace />,
+  },
+  {
+    path: "/:lang",
+    element: <LanguageWrapper />,
+    children: [
+      {
+        element: <Auth />,
         index: true,
-        element: <RecordsTable />,
-      },
-      {
-        path: "/buy",
-        element: <Buy />,
-      },
-      {
-        path: "/entities",
-        element: <Entity />,
-      },
-      {
-        path: "/user/:id",
-        element: <User />,
-      },
-      {
-        path: "/version",
-        element: <Version />,
       },
       {
         path: "*",
@@ -128,16 +179,8 @@ export const userRouter = createBrowserRouter([
       },
     ],
   },
-]);
-
-export const authRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <Auth />,
-    index: true,
-  },
   {
     path: "*",
-    element: <NotFound />,
+    element: <Navigate to="/en" replace />,
   },
 ]);

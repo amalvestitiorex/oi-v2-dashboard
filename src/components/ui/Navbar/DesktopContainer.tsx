@@ -1,129 +1,168 @@
+import { FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Container, Dropdown, Icon, Image, Menu } from "semantic-ui-react";
+import {
+  Container,
+  Dropdown,
+  DropdownProps,
+  Icon,
+  Image,
+  Menu,
+} from "semantic-ui-react";
 import { signOut } from "../../../redux/slices/auth.slice";
 import { AppDispatch, RootState } from "../../../redux/store";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
+import { getLanguages } from "../../../services/languages.service";
+import { Language } from "../../../interfaces/languages";
 
-export const DesktopContainer = () => {
+interface DesktopContainerProps {
+  children: React.ReactNode;
+  lang?: string;
+}
+
+export const DesktopContainer: FC<DesktopContainerProps> = ({
+  children,
+  lang,
+}) => {
   const navigation = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+  const { t, i18n } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
 
+  const handleSelectLanguage = (
+    _e: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
+    const lang = data.value as string;
+    navigation(switchLanguage(lang));
+  };
+
+  const switchLanguage = (lang: string) => {
+    const pathSegments = location.pathname.split("/");
+    pathSegments[1] = lang;
+    return pathSegments.join("/");
+  };
+
+  const { data: languages } = useQuery(
+    "languages",
+    async () => await getLanguages({ page: 1, limit: 100, query: "" })
+  );
+
   return (
-    <Menu fixed={"top"} pointing={false} secondary={false} size="large">
-      <Container>
-        <Menu.Item as="a" href="/" header>
-          <Image size="tiny" src="/logo.png" style={{ marginRight: "0.5em" }} />
-          Intelligence
-        </Menu.Item>
-        {user.role === "admin" && (
-          <Menu.Item as="a" href="/stats">
-            Estadísticas
+    <Container style={{ height: "100vh", marginTop: "58px" }}>
+      <Menu fixed={"top"} pointing={false} secondary={false}>
+        <Container>
+          <Menu.Item href={`/${lang}`} header>
+            <Image
+              size="tiny"
+              src="/logo.png"
+              style={{ marginRight: "0.5em" }}
+            />
+            Intelligence
           </Menu.Item>
-        )}
-        <Dropdown as={Menu.Item} text="Registros">
-          <Dropdown.Menu>
-            {user.role === "admin" && (
-              <Dropdown.Item as="a" href={"/add-records"}>
-                <Icon name="plus" />
-                Agregar registros
-              </Dropdown.Item>
-            )}
-            <Dropdown.Item
-              as="a"
-              href={user.role === "admin" ? "/records" : "/"}
-            >
-              <Icon name="list" />
-              Listado de registros
-            </Dropdown.Item>
-            <Dropdown.Item as="a" href={"/buy"}>
-              <Icon name="cart" />
-              Recomendaciones de compra
-            </Dropdown.Item>
-            <Dropdown.Item as="a" href={"/entities"}>
-              <Icon name="users" />
-              Enriquecimiento de autoridades
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        {user.role === "admin" && (
-          <>
-            <Dropdown as={Menu.Item} text="Usuarios">
-              <Dropdown.Menu>
-                <Dropdown.Item as="a" href={"/add-user"}>
-                  <Icon name="plus" />
-                  Agregar usuario
-                </Dropdown.Item>
-                <Dropdown.Item as="a" href={"/users"}>
-                  <Icon name="list" />
-                  Listado de usuarios
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Dropdown as={Menu.Item} text="Configuración">
-              <Dropdown.Menu>
-                <Dropdown.Item as="a" href={"/add-language"}>
-                  <Icon name="plus" />
-                  Agregar lenguajes
-                </Dropdown.Item>
-                <Dropdown.Item as="a" href={"/languages"}>
-                  <Icon name="list" />
-                  Listado de lenguajes
-                </Dropdown.Item>
-                <Dropdown.Item as="a" href={"/add-translate"}>
-                  <Icon name="plus" />
-                  Agregar traduccion
-                </Dropdown.Item>
-                <Dropdown.Item as="a" href={"/translates"}>
-                  <Icon name="language" />
-                  Listado de traducciones
-                </Dropdown.Item>
-                <Dropdown.Item as="a" href={"/console"}>
-                  <Icon name="terminal" />
-                  Consola
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </>
-        )}
-        <Menu.Item position="right">
-          <Dropdown
-            simple
-            direction="left"
-            icon={
-              <Image
-                avatar
-                src={`https://ui-avatars.com/api/?name=${user.name}&background=65a20c&color=fff&rounded=true&bold=true&format=svg`}
-                alt="avatar"
-              />
-            }
-          >
+          {user.role === "admin" && (
+            <Menu.Item href={`/${lang}/stats`}>{t("Stats")}</Menu.Item>
+          )}
+
+          <Dropdown pointing className="link item" text={t("Records")}>
             <Dropdown.Menu>
-              <Dropdown.Header>Hola, {user.name} ✋</Dropdown.Header>
-              <Dropdown.Divider />
-              <Dropdown.Item as="a" href={`/user/${user._id}`}>
-                <Icon name="user" />
-                Profile
-              </Dropdown.Item>
-              <Dropdown.Divider />
-              <Dropdown.Item as="a" href="/version">
-                <Icon name="info" />
-                Version {import.meta.env.VITE_VERSION}
-              </Dropdown.Item>
               <Dropdown.Item
-                as="a"
-                onClick={() => {
-                  dispatch(signOut());
-                  navigation("/");
-                }}
+                href={user.role === "admin" ? `/${lang}/records` : `/${lang}`}
               >
-                <Icon name="log out" />
-                Logout
+                <Icon name="list" />
+                {t("Records list")}
               </Dropdown.Item>
+              <Dropdown.Item href={`/${lang}/buy`}>
+                <Icon name="cart" />
+                {t("Buy records")}
+              </Dropdown.Item>
+              {/* <Dropdown.Item  href={`/${lang}/entities`}>
+                <Icon name="users" />
+                {t("Authorities")}
+              </Dropdown.Item> */}
             </Dropdown.Menu>
           </Dropdown>
-        </Menu.Item>
-      </Container>
-    </Menu>
+
+          {user.role === "admin" && (
+            <>
+              <Menu.Item href={`/${lang}/users`}>{t("Users")}</Menu.Item>
+
+              <Dropdown pointing className="link item" text={t("Settings")}>
+                <Dropdown.Menu>
+                  <Dropdown.Item href={`/${lang}/languages`}>
+                    <Icon name="list" />
+                    {t("Languages list")}
+                  </Dropdown.Item>
+                  <Dropdown.Item href={`/${lang}/translates`}>
+                    <Icon name="language" />
+                    {t("Translations list")}
+                  </Dropdown.Item>
+                  <Dropdown.Item href={`/${lang}/console`}>
+                    <Icon name="terminal" />
+                    {t("Console")}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
+          <Menu.Item position="right">
+            <Dropdown
+              simple
+              direction="left"
+              icon={
+                <Image
+                  avatar
+                  src={`https://ui-avatars.com/api/?name=${user.name}&background=65a20c&color=fff&rounded=true&bold=true&format=svg`}
+                  alt="avatar"
+                  size="mini"
+                />
+              }
+            >
+              <Dropdown.Menu as={Menu}>
+                <Dropdown.Header>
+                  {t("Hi")}, {user.name} ✋
+                </Dropdown.Header>
+                <Dropdown.Divider />
+                <Dropdown.Item href={`/${lang}/user/${user._id}`}>
+                  <Icon name="user" />
+                  {t("Profile")}
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item href={`/${lang}/version`}>
+                  <Icon name="info" />
+                  {t("Version")} {import.meta.env.VITE_VERSION}
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    dispatch(signOut());
+                    navigation(`/${lang}`);
+                  }}
+                >
+                  <Icon name="log out" />
+                  {t("Logout")}
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+            <Dropdown
+              style={{ marginLeft: "10px" }}
+              placeholder={t("Select language")}
+              fluid
+              selection
+              value={i18n.language}
+              options={
+                languages?.map((lang: Language) => ({
+                  key: lang.key,
+                  value: lang.key,
+                  text: lang.name,
+                })) || []
+              }
+              onChange={handleSelectLanguage}
+            />
+          </Menu.Item>
+        </Container>
+      </Menu>
+      {children}
+    </Container>
   );
 };

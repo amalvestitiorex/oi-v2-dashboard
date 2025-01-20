@@ -3,8 +3,8 @@ import { Form, Segment } from "semantic-ui-react";
 import { initialValues, validationSchema } from "./LoginForm.form";
 import "./LoginForm.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { authThunk } from "../../../redux/thunks/auth.thunk";
-import { AppDispatch, RootState } from "../../../redux/store";
+import { authThunk } from "../../../../redux/thunks/auth.thunk";
+import { AppDispatch, RootState } from "../../../../redux/store";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 

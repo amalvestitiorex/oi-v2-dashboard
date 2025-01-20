@@ -1,5 +1,5 @@
 export * from "./Auth";
-export * from "./Buy";
+export * from "./Record/Buy";
 export * from "./Console";
 export * from "./Dashboard";
 export * from "./Entity";

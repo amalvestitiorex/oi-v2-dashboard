@@ -1,5 +1,5 @@
 import { jwtDecode, JwtPayload } from "jwt-decode";
-import { User } from "../interfaces/auth";
+import { User } from "../interfaces/users";
 
 export interface JwtResponse extends JwtPayload {
   user: User;

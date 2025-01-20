@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionTitleProps,
-  Container,
   Dropdown,
+  DropdownProps,
   Icon,
   Image,
   Menu,
@@ -14,14 +14,27 @@ import {
 } from "semantic-ui-react";
 import { signOut } from "../../../redux/slices/auth.slice";
 import { AppDispatch, RootState } from "../../../redux/store";
+import { useTranslation } from "react-i18next";
+import { Language } from "../../../interfaces/languages";
+import { useQuery } from "react-query";
+import { getLanguages } from "../../../services/languages.service";
 
-export const MobileContainer = () => {
+interface MobileContainerProps {
+  children: React.ReactNode;
+  lang?: string;
+}
+
+export const MobileContainer: FC<MobileContainerProps> = ({
+  children,
+  lang,
+}) => {
   const [sidebarOpened, setSidebarOpened] = useState(false);
   const [activeIndex, setActiveIndex] = useState<string | number | undefined>(
     0
   );
   const navigation = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+  const { t, i18n } = useTranslation();
   const { user } = useSelector((state: RootState) => state.auth);
 
   const handleSidebarHide = () => setSidebarOpened(false);
@@ -35,17 +48,38 @@ export const MobileContainer = () => {
     setActiveIndex(newIndex);
   };
 
+  const handleSelectLanguage = (
+    _e: React.SyntheticEvent<HTMLElement, Event>,
+    data: DropdownProps
+  ) => {
+    const lang = data.value as string;
+    if (lang !== i18n.language || lang !== "Select language") {
+      navigation(switchLanguage(lang));
+    }
+  };
+
+  const switchLanguage = (lang: string) => {
+    const pathSegments = location.pathname.split("/");
+    pathSegments[1] = lang;
+    return pathSegments.join("/");
+  };
+
+  const { data: languages } = useQuery(
+    "languages",
+    async () => await getLanguages({ page: 1, limit: 100, query: "" })
+  );
+
   return (
-    <Sidebar.Pushable>
+    <Sidebar.Pushable as={Segment}>
       <Sidebar
         as={Menu}
         animation="overlay"
         onHide={handleSidebarHide}
         vertical
         visible={sidebarOpened}
+        width="wide"
       >
         <Menu.Item
-          as="a"
           header
           style={{
             display: "flex",
@@ -53,7 +87,7 @@ export const MobileContainer = () => {
             itemAlign: "center",
           }}
           onClick={() => {
-            navigation("/");
+            navigation(`/${lang}`);
             handleSidebarHide();
           }}
         >
@@ -71,14 +105,15 @@ export const MobileContainer = () => {
                 >
                   <Menu.Header style={{ padding: 15, fontWeight: "bold" }}>
                     <Icon name="dashboard" />
-                    Dashboard
+                    {t("Dashboard")}
+
                     <Icon name="dropdown" />
                   </Menu.Header>
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 0}>
-                  <Menu.Item as="a" href="/stats">
+                  <Menu.Item href={`/${lang}/stats`}>
                     <Icon name="chart bar" />
-                    Estadísticas
+                    {t("Stats")}
                   </Menu.Item>
                 </Accordion.Content>
               </>
@@ -90,29 +125,26 @@ export const MobileContainer = () => {
             >
               <Menu.Header style={{ padding: 15, fontWeight: "bold" }}>
                 <Icon name="book" />
-                Registros
+                {t("Records")}
+
                 <Icon name="dropdown" />
               </Menu.Header>
             </Accordion.Title>
             <Accordion.Content active={activeIndex === 1}>
-              {user.role === "admin" && (
-                <Menu.Item as="a" href="/add-records">
-                  <Icon name="plus" />
-                  Agregar registros
-                </Menu.Item>
-              )}
-              <Menu.Item as="a" href={user.role === "admin" ? "/records" : "/"}>
+              <Menu.Item
+                href={user.role === "admin" ? `/${lang}/records` : `/${lang}`}
+              >
                 <Icon name="list" />
-                Listado de registros
+                {t("Records list")}
               </Menu.Item>
-              <Menu.Item as="a" href={"/buy"}>
+              <Menu.Item href={`/${lang}/buy`}>
                 <Icon name="cart" />
-                Recomendaciones de compra
+                {t("Buy records")}
               </Menu.Item>
-              <Menu.Item as="a" href={"/entities"}>
+              {/* <Menu.Item  href={`/${lang}/entities`}>
                 <Icon name="users" />
-                Enriquecimiento de autoridades
-              </Menu.Item>
+                {t("Authorities")}
+              </Menu.Item> */}
             </Accordion.Content>
             {user.role === "admin" && (
               <>
@@ -123,20 +155,18 @@ export const MobileContainer = () => {
                 >
                   <Menu.Header as="h5" style={{ padding: 15 }}>
                     <Icon name="users" />
-                    Usuarios
+                    {t("Users")}
+
                     <Icon name="dropdown" />
                   </Menu.Header>
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 2}>
-                  <Menu.Item as="a" href={"/add-user"}>
-                    <Icon name="plus" />
-                    Agregar usuario
-                  </Menu.Item>
-                  <Menu.Item as="a" href={"/users"}>
+                  <Menu.Item href={`/${lang}/users`}>
                     <Icon name="list" />
-                    Listado de usuarios
+                    {t("Users")}
                   </Menu.Item>
                 </Accordion.Content>
+
                 <Accordion.Title
                   active={activeIndex === 3}
                   index={3}
@@ -144,30 +174,23 @@ export const MobileContainer = () => {
                 >
                   <Menu.Header as="h5" style={{ padding: 15 }}>
                     <Icon name="cogs" />
-                    Configuración
+                    {t("Settings")}
+
                     <Icon name="dropdown" />
                   </Menu.Header>
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === 3}>
-                  <Menu.Item as="a" href={"/add-language"}>
-                    <Icon name="plus" />
-                    Agregar lenguajes
-                  </Menu.Item>
-                  <Menu.Item as="a" href={"/languages"}>
+                  <Menu.Item href={`/${lang}/languages`}>
                     <Icon name="list" />
-                    Listado de lenguajes
+                    {t("Languages list")}
                   </Menu.Item>
-                  <Menu.Item as="a" href={"/add-translate"}>
-                    <Icon name="plus" />
-                    Agregar traduccion
-                  </Menu.Item>
-                  <Menu.Item as="a" href={"/translates"}>
+                  <Menu.Item href={`/${lang}/translates`}>
                     <Icon name="language" />
-                    Listado de traducciones
+                    {t("Translations list")}
                   </Menu.Item>
-                  <Menu.Item as="a" href={"/console"}>
+                  <Menu.Item href={`/${lang}/console`}>
                     <Icon name="terminal" />
-                    Consola
+                    {t("Console")}
                   </Menu.Item>
                 </Accordion.Content>
               </>
@@ -183,75 +206,85 @@ export const MobileContainer = () => {
           }}
         >
           <Menu.Item
-            as="a"
             onClick={() => {
               dispatch(signOut());
-              navigation("/");
+              navigation(`/${lang}`);
             }}
           >
             <Icon name="log out" />
-            Logout
+            {t("Logout")}
           </Menu.Item>
           <Menu.Item
-            as="a"
-            href="/version"
+            href={`/${lang}/version`}
             style={{ color: "olive", textAlign: "center" }}
           >
-            Version {import.meta.env.VITE_VERSION}
+            {t("Version")} {import.meta.env.VITE_VERSION}
           </Menu.Item>
         </div>
       </Sidebar>
 
       <Sidebar.Pusher dimmed={sidebarOpened}>
-        <Segment
-          textAlign="center"
-          style={{ height: "100vh", width: "100vw" }}
-          vertical
-        >
-          <Container>
-            <Menu pointing secondary size="large">
-              <Menu.Item onClick={handleToggle}>
-                <Icon name="sidebar" />
-              </Menu.Item>
-              <Menu.Item position="right">
-                <Dropdown
-                  simple
-                  direction="left"
-                  icon={
-                    <Image
-                      avatar
-                      src={`https://ui-avatars.com/api/?name=${user.name}&background=65a20c&color=fff&rounded=true&bold=true&format=svg`}
-                      alt="avatar"
-                    />
-                  }
-                >
-                  <Dropdown.Menu>
-                    <Dropdown.Header>Hola, {user.name} ✋</Dropdown.Header>
-                    <Dropdown.Divider />
-                    <Dropdown.Item as="a" href={`/user/${user._id}`}>
-                      <Icon name="user" />
-                      Profile
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item as="a" href="/version">
-                      <Icon name="info" />
-                      Version {import.meta.env.VITE_VERSION}
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      as="a"
-                      onClick={() => {
-                        dispatch(signOut());
-                        navigation("/");
-                      }}
-                    >
-                      <Icon name="log out" />
-                      Logout
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Menu.Item>
-            </Menu>
-          </Container>
+        <Segment style={{ minHeight: "100vh", padding: "0px 0px" }}>
+          <Menu pointing secondary size="tiny">
+            <Menu.Item onClick={handleToggle}>
+              <Icon name="sidebar" size="big" />
+            </Menu.Item>
+            <Menu.Item position="right">
+              <Dropdown
+                style={{ marginRight: "10px" }}
+                placeholder={t("Select language")}
+                fluid
+                selection
+                value={i18n.language}
+                options={
+                  languages?.map((lang: Language) => ({
+                    key: lang.key,
+                    value: lang.key,
+                    text: lang.name,
+                  })) || []
+                }
+                onChange={handleSelectLanguage}
+              />
+              <Dropdown
+                simple
+                direction="left"
+                icon={
+                  <Image
+                    avatar
+                    src={`https://ui-avatars.com/api/?name=${user.name}&background=65a20c&color=fff&rounded=true&bold=true&format=svg`}
+                    alt="avatar"
+                    size="mini"
+                  />
+                }
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Header>
+                    {t("Hi")}, {user.name} ✋
+                  </Dropdown.Header>
+                  <Dropdown.Divider />
+                  <Dropdown.Item href={`/${lang}/user/${user._id}`}>
+                    <Icon name="user" />
+                    {t("Profile")}
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item href={`/${lang}/version`}>
+                    <Icon name="info" />
+                    {t("Version")} {import.meta.env.VITE_VERSION}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      dispatch(signOut());
+                      navigation(`/${lang}`);
+                    }}
+                  >
+                    <Icon name="log out" />
+                    {t("Logout")}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </Menu.Item>
+          </Menu>
+          {children}
         </Segment>
       </Sidebar.Pusher>
     </Sidebar.Pushable>

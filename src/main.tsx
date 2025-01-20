@@ -9,8 +9,19 @@ import { store } from "./redux/store.ts";
 
 import { Flip, ToastContainer } from "react-toastify";
 import { App } from "./App.tsx";
+import "./i18n/index.ts";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      staleTime: 5000,
+      cacheTime: 5000,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

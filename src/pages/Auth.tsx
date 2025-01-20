@@ -1,5 +1,5 @@
 import { Grid, Header, Image } from "semantic-ui-react";
-import { LoginForm } from "../components/ui/LoginForm/LoginForm";
+import { LoginForm } from "../components/ui/Forms/LoginForm/LoginForm";
 
 export const Auth = () => {
   return (

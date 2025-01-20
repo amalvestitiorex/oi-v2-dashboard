@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { authThunk } from "../thunks/auth.thunk";
-import { getUserByToken, hasExpiredToken } from "../../utils/jwt";
 import { toast } from "react-toastify";
-import { AuthState, User } from "../../interfaces/auth";
+import { AuthState } from "../../interfaces/auth";
+import { getUserByToken, hasExpiredToken } from "../../utils/jwt";
+import { authThunk } from "../thunks/auth.thunk";
+import { User } from "../../interfaces/users";
 
 const accessToken = localStorage.getItem("access");
 

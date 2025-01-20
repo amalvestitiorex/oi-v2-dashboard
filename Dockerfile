@@ -7,7 +7,7 @@ WORKDIR /app
 # Copia todo el código fuente al contenedor
 COPY . .
 
-ENV REACT_APP_TYPE=production
+ENV VITE_TYPE=production
 
 # Instala las dependencias
 RUN npm ci
@@ -20,7 +20,7 @@ RUN npm run build
 FROM --platform=linux/amd64 nginx:alpine
 
 # Copia los archivos de build al directorio de Nginx
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Copia el archivo de configuración de Nginx
 COPY nginx.conf /etc/nginx/nginx.conf

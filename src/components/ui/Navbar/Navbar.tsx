@@ -1,6 +1,8 @@
 import { createMedia } from "@artsy/fresnel";
 import { DesktopContainer } from "./DesktopContainer";
 import { MobileContainer } from "./MobileContainer";
+import { FC, PropsWithChildren } from "react";
+import { useParams } from "react-router-dom";
 
 const { MediaContextProvider, Media } = createMedia({
   breakpoints: {
@@ -10,17 +12,19 @@ const { MediaContextProvider, Media } = createMedia({
   },
 });
 
-export const Navbar = () => {
-  const ResponsiveContainer = () => (
+export const Navbar: FC<PropsWithChildren> = ({ children }) => {
+  const { lang } = useParams();
+
+  const ResponsiveContainer: FC<PropsWithChildren> = ({ children }) => (
     <MediaContextProvider>
       <Media greaterThan="mobile">
-        <DesktopContainer />
+        <DesktopContainer children={children} lang={lang} />
       </Media>
       <Media at="mobile">
-        <MobileContainer />
+        <MobileContainer children={children} lang={lang} />
       </Media>
     </MediaContextProvider>
   );
 
-  return <ResponsiveContainer />;
+  return <ResponsiveContainer>{children}</ResponsiveContainer>;
 };

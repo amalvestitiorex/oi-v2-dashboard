@@ -1,21 +1,21 @@
-import { useQuery } from "react-query";
-import {
-  TableRow,
-  TableHeaderCell,
-  TableHeader,
-  TableCell,
-  TableBody,
-  Table,
-  Tab,
-} from "semantic-ui-react";
-import { findAllRecords } from "../../services/records.service";
-import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { PaginationRecords, Record } from "../../interfaces/records";
+import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { useParams, useSearchParams } from "react-router-dom";
+import { Button, Icon, Tab, TabPane } from "semantic-ui-react";
+import { Filters } from "../../components/ui/Shared/Filters";
+import { Records } from "../../components/ui/Tables/Records";
+import { RootState } from "../../redux/store";
+import { findAllRecords } from "../../services/records.service";
 
 export const RecordsTable = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const { lang } = useParams();
+  const [searchParams] = useSearchParams();
   const [active, setActive] = useState(true);
+  const { t } = useTranslation();
+  const { user } = useSelector((state: RootState) => state.auth);
+
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "20");
   const query = searchParams.get("query") || "";
@@ -23,7 +23,7 @@ export const RecordsTable = () => {
   const endDate =
     searchParams.get("end-date") || new Date().toISOString().split("T")[0];
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading } = useQuery(
     ["records", { page, limit, active, query, startDate, endDate }],
     async () =>
       await findAllRecords({
@@ -33,75 +33,78 @@ export const RecordsTable = () => {
         query,
         startDate,
         endDate,
-      })
-  );
-
-  console.log(data);
-
-  const ListRecordsTable = ({
-    records,
-  }: {
-    records: PaginationRecords | undefined;
-  }) => (
-    <Table color="olive">
-      <TableHeader>
-        <TableRow>
-          <TableHeaderCell>ID</TableHeaderCell>
-          <TableHeaderCell>Titulo / Autores</TableHeaderCell>
-          <TableHeaderCell>Usuario</TableHeaderCell>
-          <TableHeaderCell>Certeza</TableHeaderCell>
-          <TableHeaderCell>Fecha</TableHeaderCell>
-          <TableHeaderCell>Tipo</TableHeaderCell>
-          <TableHeaderCell>Acciones</TableHeaderCell>
-        </TableRow>
-      </TableHeader>
-
-      <TableBody>
-        {records?.docs.map((record: Record) => (
-          <TableRow>
-            <TableCell>{record.id}</TableCell>
-            <TableCell>{record.title}</TableCell>
-            <TableCell>{record.user.name}</TableCell>
-            <TableCell>{record.quality}</TableCell>
-            <TableCell>
-              {new Date(record.updatedAt).toLocaleDateString()}
-            </TableCell>
-            <TableCell>{record.type}</TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+      }),
+    {
+      keepPreviousData: true,
+    }
   );
 
   const panes = [
     {
-      menuItem: "Registros Activos",
+      menuItem: t("Active Records"),
       render: () => (
-        <Tab.Pane loading={isLoading} error={isError}>
-          <ListRecordsTable records={data} />
-        </Tab.Pane>
+        <TabPane loading={isLoading}>
+          <Records records={data} />
+        </TabPane>
       ),
     },
     {
-      menuItem: "Registros Inactivos",
+      menuItem: t("Inactive Records"),
       render: () => (
-        <Tab.Pane loading={isLoading} error={isError}>
-          <ListRecordsTable records={data} />
-        </Tab.Pane>
+        <TabPane loading={isLoading}>
+          <Records records={data} />
+        </TabPane>
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Listado de registros</h2>
-      <Tab
-        menu={{ fluid: true, vertical: true }}
-        menuPosition="right"
-        panes={panes}
-        onTabChange={(_e, data) => setActive(data.activeIndex === 0)}
-      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
+          <h2>{t("List of records")}</h2>
+          {user.role === "admin" && (
+            <Button
+              as={"a"}
+              href={`/${lang}/add-records`}
+              color="olive"
+              size="mini"
+              style={{
+                textDecoration: "none",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Icon name="add" /> {t("Add Record")}
+            </Button>
+          )}
+        </div>
+        <Filters query={query} startDate={startDate} endDate={endDate} />
+      </div>
+      {user.role === "admin" ? (
+        <Tab
+          menu={{ secondary: true }}
+          panes={panes}
+          onTabChange={(_e, data) => setActive(data.activeIndex === 0)}
+        />
+      ) : (
+        <Records records={data} />
+      )}
     </div>
   );
 };
