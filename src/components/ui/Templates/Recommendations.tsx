@@ -52,7 +52,7 @@ export const Recommendations = ({
         });
       }
     })();
-  }, [recommendations, user]);
+  }, [recommendations, user, dilve]);
 
   const ItemCard = ({ record }: ItemCardProps) => (
     <Card
@@ -63,7 +63,11 @@ export const Recommendations = ({
         setOpen(true);
       }}
     >
-      <Image src={record.image} wrapped ui={false} rounded />
+      <Image
+        src={record.image ? record.image : "/book.jpeg"}
+        style={{ height: 200, resizeMode: "cover" }}
+        rounded
+      />
       <Card.Content>
         <Card.Header>
           <p className={styles.lineClamp2} title={record.title}>

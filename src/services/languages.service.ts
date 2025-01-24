@@ -57,7 +57,15 @@ export const googleTranslate = async ({
   target,
 }: IGoogleTranslate): Promise<Record> => {
   try {
-    const res = await axios.post("translate", { text, target });
+    const res = await axios.post(
+      "translate",
+      { text, target },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
+        },
+      }
+    );
     if (res.status === 200) {
       return res.data;
     } else {

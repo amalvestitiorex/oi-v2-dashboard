@@ -54,12 +54,7 @@ export const DesktopContainer: FC<DesktopContainerProps> = ({
       <Menu fixed={"top"} pointing={false} secondary={false}>
         <Container>
           <Menu.Item href={`/${lang}`} header>
-            <Image
-              size="tiny"
-              src="/logo.png"
-              style={{ marginRight: "0.5em" }}
-            />
-            Intelligence
+            <Image size="small" src="/logo.png" />
           </Menu.Item>
           {user.role === "admin" && (
             <Menu.Item href={`/${lang}/stats`}>{t("Stats")}</Menu.Item>

@@ -36,7 +36,7 @@ export const RecordInfo = ({ record }: RecordInfoProps) => {
 
   return (
     <div style={{ display: "flex", gap: 20 }}>
-      <div style={{ width: 400 }}>
+      <div style={{ minWidth: "15%" }}>
         <Image rounded src={image()} alt={record?.title} size="small" />
       </div>
       <div>

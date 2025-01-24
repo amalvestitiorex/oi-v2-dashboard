@@ -7,7 +7,6 @@ import { getLocales } from "../services/locale.service";
 import { getTranslations } from "../services/translations.service";
 import { Loader } from "semantic-ui-react";
 import { findAllUsers } from "../services/users.service";
-// import ReactDOMServer from "react-dom/server";
 
 export const Dashboard = () => {
   const { t } = useTranslation();
@@ -52,8 +51,6 @@ export const Dashboard = () => {
     languages: languages?.length || 0,
     locales: locales?.length || 0,
   };
-
-  // const html = ReactDOMServer.renderToString(<Statistic statics={statics} />);
 
   return (
     <div

@@ -16,6 +16,8 @@ import { Points } from "../../components/ui/Templates/Points";
 import { useTranslation } from "react-i18next";
 import { getRecommendations } from "../../services/elastic.service";
 import { Recommendations } from "../../components/ui/Templates/Recommendations";
+import { Stadistic } from "../../components/ui/Templates/Stadistic";
+import { Context } from "../../components/ui/Templates/Context";
 
 export const Record = () => {
   const { t } = useTranslation();
@@ -32,13 +34,11 @@ export const Record = () => {
     async () => await googleTranslate({ text: item, target: lang })
   );
 
-  const { data: recommendations } = useQuery(
-    ["recommendations", item],
-    async () =>
-      await getRecommendations({
-        id: `${record?.user?.koha_id}_${item?.id}`,
-        isbn: item?.id_isbn,
-      })
+  const { data: recommendations } = useQuery(["recommendations", item], () =>
+    getRecommendations({
+      id: `${item?.user?.koha_id}_${item?.id}`,
+      isbn: item?.id_isbn,
+    })
   );
 
   if (isLoading || isLoadingGoogle)
@@ -60,8 +60,12 @@ export const Record = () => {
       {record?.extended_brief && (
         <ExtendedBrief extendedBrief={record?.extended_brief} />
       )}
+      <Stadistic
+        id_article={record?.id_article}
+        koha_id={record?.user?.koha_id}
+        id={record?.id}
+      />
       {size(record?.tags) > 0 && <Tags tags={record?.tags} />}
-
       {(size(record?.strong_issues) > 0 || size(record?.weak_issues) > 0) && (
         <Points
           strength={record?.strong_issues}
@@ -69,6 +73,15 @@ export const Record = () => {
         />
       )}
       {size(record?.authors) > 0 && <Authors authors={record?.authors} />}
+      <Context id={record?.id} />
+      {size(recommendations) > 0 && (
+        <Recommendations
+          recommendations={recommendations}
+          user={record?.user}
+          dilve={item?.dilve}
+        />
+      )}
+      {size(record?.reviews) > 0 && <Reviews reviews={record?.reviews} />}
       {size(record?.similar_records) > 0 && (
         <AlsoLike
           type="similarRecords"
@@ -84,14 +97,6 @@ export const Record = () => {
       {size(record?.movies) > 0 && (
         <AlsoLike type="movies" otherRecords={record?.movies} />
       )}
-      {size(recommendations) > 0 && (
-        <Recommendations
-          recommendations={recommendations}
-          user={record?.user}
-          dilve={item?.dilve}
-        />
-      )}
-      {size(record?.reviews) > 0 && <Reviews reviews={record?.reviews} />}
 
       <div
         style={{

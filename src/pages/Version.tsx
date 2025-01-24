@@ -8,6 +8,38 @@ export const Version = () => {
 
   const versions = [
     {
+      name: "v2.1",
+      date: moment("2025-1-24"),
+      description: (
+        <List>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix width image authors")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add crossref data in section authors")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add statistics of elastics search and crossref")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add context of the records")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix scimagojrs data")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix recommendations elastic search")}
+          </List.Item>
+        </List>
+      ),
+    },
+    {
       name: "v2.0",
       date: moment("2025-1-17"),
       description: (

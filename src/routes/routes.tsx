@@ -19,7 +19,6 @@ import {
   Version,
 } from "../pages";
 import { Record } from "../pages/Record";
-import { HtmlExport } from "../pages/HtmlExport";
 export const adminRouter = createBrowserRouter([
   {
     path: "/",
@@ -94,10 +93,6 @@ export const adminRouter = createBrowserRouter([
           },
         ],
       },
-      {
-        path: "record/:id/export",
-        element: <HtmlExport />,
-      },
     ],
   },
   {
@@ -147,10 +142,6 @@ export const userRouter = createBrowserRouter([
             element: <NotFound />,
           },
         ],
-      },
-      {
-        path: "record/:id/export",
-        element: <HtmlExport />,
       },
     ],
   },

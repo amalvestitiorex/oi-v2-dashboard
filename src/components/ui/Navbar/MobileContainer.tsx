@@ -91,8 +91,7 @@ export const MobileContainer: FC<MobileContainerProps> = ({
             handleSidebarHide();
           }}
         >
-          <Image size="tiny" src="/logo.png" style={{ marginRight: "0.5em" }} />
-          Intelligence
+          <Image size="small" src="/logo.png" />
         </Menu.Item>
         <Accordion>
           <>

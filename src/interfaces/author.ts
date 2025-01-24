@@ -2,7 +2,8 @@ export interface Author {
   _id: string;
   user: string;
   name: string;
-  affiliation: any[];
+  ORCID: string;
+  affiliation: Affiliation[];
   biography: string;
   quality: number;
   explanation: string;
@@ -15,4 +16,8 @@ export interface Author {
 export interface Font {
   title: string;
   url: string;
+}
+
+export interface Affiliation {
+  name: string;
 }

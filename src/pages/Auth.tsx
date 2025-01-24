@@ -1,4 +1,4 @@
-import { Grid, Header, Image } from "semantic-ui-react";
+import { Grid, Image } from "semantic-ui-react";
 import { LoginForm } from "../components/ui/Forms/LoginForm/LoginForm";
 
 export const Auth = () => {
@@ -10,15 +10,9 @@ export const Auth = () => {
       padded
     >
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as="h2" color="olive" textAlign="center">
-          <Image
-            src="/logo.png"
-            style={{
-              width: 150,
-            }}
-            alt="logo"
-          />
-        </Header>
+        <center style={{ padding: 20 }}>
+          <Image size="small" src="/logo.png" />
+        </center>
         <LoginForm />
       </Grid.Column>
     </Grid>
