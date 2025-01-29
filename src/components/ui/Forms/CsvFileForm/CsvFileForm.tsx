@@ -1,21 +1,30 @@
 import { useState } from "react";
-import { useMutation } from "react-query";
+import { useTranslation } from "react-i18next";
+import { useMutation, useQueryClient } from "react-query";
 import { Form, Header, Icon, Segment } from "semantic-ui-react";
 import { IUploadCsvRecords } from "../../../../interfaces/records";
+import { User } from "../../../../interfaces/users";
 import { uploadCsvRecords } from "../../../../services/records.service";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../redux/store";
 import "./CsvFileForm.module.css";
-import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const CsvFileForm = () => {
+interface CsvFileFormProps {
+  userSelected: User;
+}
+
+export const CsvFileForm = ({ userSelected }: CsvFileFormProps) => {
   const { t } = useTranslation();
-  const { user } = useSelector((state: RootState) => state.auth);
   const [file, setFile] = useState<File>();
+  const queryClient = useQueryClient();
+  const navigation = useNavigate();
+  const { lang } = useParams();
 
   const mutation = useMutation({
     mutationFn: (data: IUploadCsvRecords) => {
       return uploadCsvRecords(data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("records");
     },
   });
 
@@ -27,10 +36,12 @@ export const CsvFileForm = () => {
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (file) {
+      console.log((e.target as HTMLFormElement).value);
       const data = new FormData();
       data.append("file", file);
-      data.append("user", JSON.stringify(user));
+      data.append("user", JSON.stringify(userSelected));
       mutation.mutate({ data });
+      navigation(`/${lang}/records`);
     }
   };
 

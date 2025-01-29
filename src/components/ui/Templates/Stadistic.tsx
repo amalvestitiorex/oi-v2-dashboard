@@ -48,11 +48,7 @@ export const Stadistic = ({
   return (
     widths > 0 && (
       <div>
-        <Header
-          as={"h2"}
-          dividing
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
+        <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
           {t("Statistic")}
           <div>
             <Popup

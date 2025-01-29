@@ -16,11 +16,7 @@ export const Context = ({ id }: { id?: string }) => {
 
   return (
     <div>
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("Context")}
         <div>
           <Popup

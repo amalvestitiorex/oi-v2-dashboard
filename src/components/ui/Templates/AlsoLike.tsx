@@ -16,11 +16,7 @@ export const AlsoLike = ({ otherRecords, type }: AlsoLikeProps) => {
 
   return (
     <div id={type === "similarRecords" ? "similar_records" : type}>
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {type === "similarRecords" && t("You may also like")}
         {type === "books" && t("Books that might interest you")}
         {type === "series" && t("Series that might interest you")}

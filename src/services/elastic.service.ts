@@ -7,7 +7,9 @@ export const getRecommendations = async ({
 }: IGetRecommendations): Promise<IRecommendations> => {
   try {
     const res = await axios.get(
-      `/elastic/recommendations?id=${id}&isbn=${isbn}`,
+      `/elastic/recommendations?id=${id ? id : "none"}&isbn=${
+        isbn ? isbn : "none"
+      }`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access")}`,

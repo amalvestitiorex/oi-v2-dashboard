@@ -10,11 +10,7 @@ export const Tags = ({ tags }: TagsProps) => {
 
   return (
     <div id="tags">
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("Tags")}
         <div>
           <Popup

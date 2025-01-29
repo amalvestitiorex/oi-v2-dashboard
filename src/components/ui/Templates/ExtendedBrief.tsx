@@ -11,11 +11,7 @@ export const ExtendedBrief = ({ extendedBrief }: ExtendedBriefProps) => {
 
   return (
     <div id="extended_brief">
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("Extended brief")}
         <div>
           <Popup

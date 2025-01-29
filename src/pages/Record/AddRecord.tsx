@@ -100,7 +100,7 @@ export const AddRecord = () => {
       menuItem: t("CSV File"),
       render: () => (
         <TabPane attached={false}>
-          <CsvFileForm />
+          <CsvFileForm userSelected={userSelected} />
         </TabPane>
       ),
     },

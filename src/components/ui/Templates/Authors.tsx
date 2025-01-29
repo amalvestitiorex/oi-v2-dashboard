@@ -110,11 +110,7 @@ export const Authors = ({ authors }: AuthorsProps) => {
 
   return (
     <div id="authors">
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("About the author(s)")}
         <div>
           <Popup

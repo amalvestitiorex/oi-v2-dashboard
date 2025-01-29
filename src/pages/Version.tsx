@@ -8,6 +8,54 @@ export const Version = () => {
 
   const versions = [
     {
+      name: "v2.2",
+      date: moment("2025-1-29"),
+      description: (
+        <List>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Example template ")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Faker data")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix IA Message")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add default prompt")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix elastic search api")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix bug error upload csv")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Fix tooltips in template html")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add preview and price files")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add img hidden")}
+          </List.Item>
+          <List.Item>
+            <List.Icon name="caret right" />
+            {t("Add sources consulted")}
+          </List.Item>
+        </List>
+      ),
+    },
+    {
       name: "v2.1",
       date: moment("2025-1-24"),
       description: (

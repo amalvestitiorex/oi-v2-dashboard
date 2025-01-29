@@ -9,11 +9,7 @@ interface ReviewsProps {
 export const Reviews = ({ reviews }: ReviewsProps) => {
   return (
     <div id="reviews">
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("Reviews")}
         <div>
           <Popup

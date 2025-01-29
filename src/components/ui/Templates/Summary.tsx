@@ -38,11 +38,7 @@ export const Summary = ({ summary, dilve }: SummaryProps) => {
 
   return (
     <div id="summary">
-      <Header
-        as={"h2"}
-        dividing
-        style={{ display: "flex", justifyContent: "space-between" }}
-      >
+      <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
         {t("Summary")}
         <div>
           <Popup

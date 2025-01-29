@@ -78,7 +78,10 @@ export interface Record {
   tags?: string[];
   quality?: number;
   explanation?: string;
-  links?: string[];
+  links?: {
+    title: string;
+    url: string;
+  }[];
   urls?: string[];
   fonts?: string[];
   image?: string;

@@ -106,11 +106,7 @@ export const Recommendations = ({
   return (
     <div>
       {(recommendations?.dataBiblionumber?.length ?? 0) > 0 && (
-        <Header
-          as={"h2"}
-          dividing
-          style={{ display: "flex", justifyContent: "space-between" }}
-        >
+        <Header as={"h2"} dividing style={{ display: "flex", gap: 10 }}>
           {t("Librarian recommendations")}
           <div>
             <Popup
